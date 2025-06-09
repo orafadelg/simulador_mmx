@@ -11,29 +11,35 @@ st.markdown("""
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin: 10px;
+    margin: 20px 10px;
     text-align: center;
+    position: relative;
 }
 .traced {
     border-left: 2px dashed lightgray;
-    margin: 0 10px;
-    padding: 10px;
+    height: 20px;
+    margin: -10px 10px 20px 10px;
 }
 .center-card {
     background-color: #c62828;
     border-radius: 10px;
     color: white;
-    padding: 20px;
+    padding: 60px 20px;
     text-align: center;
-    margin: 10px;
+    margin: 60px 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown("### Ajuste os Atributos de Experiência")
 
-# Valores iniciais de referência para comparação
 ref_values = {
     "seguranca": 6.0,
     "responsividade": 6.0,
@@ -50,7 +56,7 @@ with col1:
         value = st.slider(label, 0.0, 10.0, ref_values[attr], 0.1)
         change = (value - ref_values[attr]) / ref_values[attr] * 100
         color = "green" if change > 0 else ("red" if change < 0 else "black")
-        st.markdown(f"<span style='color:{color};'>{change:+.1f}%</span>", unsafe_allow_html=True)
+        st.markdown(f"<span style='color:{color}; font-weight:bold;'>{change:+.1f}%</span>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("<div class='traced'></div>", unsafe_allow_html=True)
         return value
@@ -61,7 +67,6 @@ with col1:
     confiabilidade = show_slider("confiabilidade", "Confiabilidade")
     empatia = show_slider("empatia", "Empatia")
 
-# Cálculos
 satisfacao = 0.25 * seguranca + 0.2 * responsividade + 0.15 * tangivel + 0.3 * confiabilidade + 0.1 * empatia
 ref_satisfacao = 0.25 * ref_values['seguranca'] + 0.2 * ref_values['responsividade'] + 0.15 * ref_values['tangivel'] + 0.3 * ref_values['confiabilidade'] + 0.1 * ref_values['empatia']
 satisfacao_change = (satisfacao - ref_satisfacao) / ref_satisfacao * 100
@@ -79,8 +84,8 @@ ref_forca_marca = ref_satisfacao * 0.15 + 6.0
 
 with col2:
     st.markdown("<div class='center-card'>", unsafe_allow_html=True)
-    st.markdown(f"<h4><strong>Satisfação</strong></h4><h2>{satisfacao:.1f}</h2>", unsafe_allow_html=True)
-    st.markdown(f"<span style='color:{color_s};'>{satisfacao_change:+.1f}%</span>", unsafe_allow_html=True)
+    st.markdown(f"<h4><strong>Satisfação</strong></h4><h1 style='margin: 10px 0;'>{satisfacao:.1f}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<span style='color:{color_s}; font-size: 18px;'>{satisfacao_change:+.1f}%</span>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("<div class='traced' style='border-color: #c62828;'></div>", unsafe_allow_html=True)
 
@@ -89,7 +94,7 @@ with col3:
         change = (current - reference) / reference * 100
         color = "green" if change > 0 else ("red" if change < 0 else "black")
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown(f"<strong>{title}</strong><br><h4>{current:.1f}</h4><span style='color:{color};'>{change:+.1f}%</span>", unsafe_allow_html=True)
+        st.markdown(f"<strong>{title}</strong><br><h3>{current:.1f}</h3><span style='color:{color}; font-weight:bold;'>{change:+.1f}%</span>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
     metric_delta("Recompra", recompra, ref_recompra)
