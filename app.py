@@ -21,9 +21,8 @@ with col1:
     def show_slider(attr, label):
         value = st.slider(label, 0.0, 10.0, ref_values[attr], 0.1)
         change = (value - ref_values[attr]) / ref_values[attr] * 100
-        arrow = "⬆️" if change > 0 else ("⬇️" if change < 0 else "➡️")
         color = "green" if change > 0 else ("red" if change < 0 else "black")
-        st.markdown(f"<span style='color:{color};'>{arrow} {change:+.1f}%</span>", unsafe_allow_html=True)
+        st.markdown(f"<span style='color:{color};'>{change:+.1f}%</span>", unsafe_allow_html=True)
         return value
 
     st.markdown("<div style='display: flex; flex-direction: column; align-items: center;'>", unsafe_allow_html=True)
@@ -38,7 +37,6 @@ with col1:
 satisfacao = 0.25 * seguranca + 0.2 * responsividade + 0.15 * tangivel + 0.3 * confiabilidade + 0.1 * empatia
 ref_satisfacao = 0.25 * ref_values['seguranca'] + 0.2 * ref_values['responsividade'] + 0.15 * ref_values['tangivel'] + 0.3 * ref_values['confiabilidade'] + 0.1 * ref_values['empatia']
 satisfacao_change = (satisfacao - ref_satisfacao) / ref_satisfacao * 100
-arrow_s = "⬆️" if satisfacao_change > 0 else ("⬇️" if satisfacao_change < 0 else "➡️")
 color_s = "green" if satisfacao_change > 0 else ("red" if satisfacao_change < 0 else "black")
 
 recompra = satisfacao * 0.35 + 6.0
@@ -54,16 +52,15 @@ ref_forca_marca = ref_satisfacao * 0.15 + 6.0
 with col2:
     st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;'>", unsafe_allow_html=True)
     st.markdown(f"<h4><strong>Satisfação</strong></h4><h2>{satisfacao:.1f}</h2>", unsafe_allow_html=True)
-    st.markdown(f"<span style='color:{color_s};'>{arrow_s} {satisfacao_change:+.1f}%</span>", unsafe_allow_html=True)
+    st.markdown(f"<span style='color:{color_s};'>{satisfacao_change:+.1f}%</span>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col3:
     st.markdown("<div style='display: flex; flex-direction: column; align-items: center; justify-content: center;'>", unsafe_allow_html=True)
     def metric_delta(title, current, reference):
         change = (current - reference) / reference * 100
-        arrow = "⬆️" if change > 0 else ("⬇️" if change < 0 else "➡️")
         color = "green" if change > 0 else ("red" if change < 0 else "black")
-        st.metric(title, f"{current:.1f}", f"{arrow} {change:+.1f}%", delta_color="inverse")
+        st.markdown(f"<div style='text-align: center;'><strong>{title}</strong><br><span>{current:.1f}</span><br><span style='color:{color};'>{change:+.1f}%</span></div>", unsafe_allow_html=True)
 
     metric_delta("Recompra", recompra, ref_recompra)
     metric_delta("Intenção de Pagar Mais", intencao_pagar, ref_intencao_pagar)
