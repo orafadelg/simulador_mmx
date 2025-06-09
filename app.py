@@ -1,7 +1,6 @@
 import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
+import altair as alt
 
 st.set_page_config(layout="wide")
 st.title("Simulador de Satisfação - MMX Okiar")
@@ -31,34 +30,34 @@ with col2:
     st.metric("Força de Marca", f"{forca_marca:.1f}")
 
 # Simulação de dados para séries históricas
-tempo = ["Onda 1", "Onda 2", "Onda 3", "Onda 4", "Onda 5"]
-cliente = [5, 5.5, 6, 6.5, 7]
-concorrente = [5.5, 6, 6, 6.5, 6.8]
+df_historico = pd.DataFrame({
+    'Onda': ["Onda 1", "Onda 2", "Onda 3", "Onda 4", "Onda 5"] * 2,
+    'Valor': [5, 5.5, 6, 6.5, 7, 5.5, 6, 6, 6.5, 6.8],
+    'Tipo': ['Cliente']*5 + ['Concorrente']*5
+})
 
-fig1, ax1 = plt.subplots()
-ax1.plot(tempo, cliente, label="Cliente")
-ax1.plot(tempo, concorrente, label="Concorrente")
-ax1.set_ylim([0, 10])
-ax1.set_title("Satisfação - Série Histórica")
-ax1.legend()
-st.pyplot(fig1)
+chart_historico = alt.Chart(df_historico).mark_line(point=True).encode(
+    x='Onda', y='Valor', color='Tipo'
+).properties(
+    title='Satisfação - Série Histórica', width=700
+)
+st.altair_chart(chart_historico)
 
 # Comparativo na jornada
-etapas = ["Descoberta", "Pesquisa", "Cadastro", "Onboarding", "Uso Inicial", "Engajamento", "Monetização", "Retenção"]
-cliente_jornada = [7, 7.5, 8, 8.5, 8, 8.5, 8, 7.5]
-concorrente_jornada = [6.5, 7, 7.5, 7.5, 7.5, 8, 7.5, 7]
+df_jornada = pd.DataFrame({
+    'Etapa': ["Descoberta", "Pesquisa", "Cadastro", "Onboarding", "Uso Inicial", "Engajamento", "Monetização", "Retenção"] * 2,
+    'Nota': [7, 7.5, 8, 8.5, 8, 8.5, 8, 7.5, 6.5, 7, 7.5, 7.5, 7.5, 8, 7.5, 7],
+    'Grupo': ['Cliente']*8 + ['Concorrente']*8
+})
 
-fig2, ax2 = plt.subplots()
-x = np.arange(len(etapas))
-width = 0.35
-ax2.bar(x - width/2, cliente_jornada, width, label='Cliente')
-ax2.bar(x + width/2, concorrente_jornada, width, label='Concorrente')
-ax2.set_xticks(x)
-ax2.set_xticklabels(etapas, rotation=45, ha='right')
-ax2.set_ylim([0, 10])
-ax2.set_title("Satisfação na Jornada")
-ax2.legend()
-st.pyplot(fig2)
+chart_jornada = alt.Chart(df_jornada).mark_bar().encode(
+    x=alt.X('Etapa:N', sort=None),
+    y='Nota:Q',
+    color='Grupo:N'
+).properties(
+    title='Satisfação na Jornada', width=700
+)
+st.altair_chart(chart_jornada)
 
 # Tabela resumo
 data = {
