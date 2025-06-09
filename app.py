@@ -45,14 +45,16 @@ col1, col2, col3 = st.columns([1.2, 1, 1.2])
 
 with col1:
     def show_slider(attr, label):
+        change = 0
+        value = ref_values[attr]
         with st.container():
             st.markdown("<div class='card'>", unsafe_allow_html=True)
-            value = st.slider(label, 0.0, 10.0, ref_values[attr], 0.1)
+            value = st.slider(label, 0.0, 10.0, ref_values[attr], 0.1, key=label)
             change = (value - ref_values[attr]) / ref_values[attr] * 100
             color = "green" if change > 0 else ("red" if change < 0 else "black")
             st.markdown(f"<span style='color:{color}; font-weight:bold;'>{change:+.1f}%</span>", unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
-            return value
+        return value
 
     seguranca = show_slider("seguranca", "Segurança")
     responsividade = show_slider("responsividade", "Responsividade")
@@ -76,18 +78,20 @@ ref_intencao_recomendar = ref_satisfacao * 0.3 + 6.0
 ref_forca_marca = ref_satisfacao * 0.15 + 6.0
 
 with col2:
-    st.markdown("<div class='center-card'>", unsafe_allow_html=True)
-    st.markdown(f"<h4><strong>Satisfação</strong></h4><h1 style='margin: 10px 0;'>{satisfacao:.1f}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<span style='color:{color_s}; font-size: 18px;'>{satisfacao_change:+.1f}%</span>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    with st.container():
+        st.markdown("<div class='center-card'>", unsafe_allow_html=True)
+        st.markdown(f"<h4><strong>Satisfação</strong></h4><h1 style='margin: 10px 0;'>{satisfacao:.1f}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<span style='color:{color_s}; font-size: 18px;'>{satisfacao_change:+.1f}%</span>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 with col3:
     def metric_delta(title, current, reference):
         change = (current - reference) / reference * 100
         color = "green" if change > 0 else ("red" if change < 0 else "black")
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown(f"<strong>{title}</strong><br><h3>{current:.1f}</h3><span style='color:{color}; font-weight:bold;'>{change:+.1f}%</span>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        with st.container():
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
+            st.markdown(f"<strong>{title}</strong><br><h3>{current:.1f}</h3><span style='color:{color}; font-weight:bold;'>{change:+.1f}%</span>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
     metric_delta("Recompra", recompra, ref_recompra)
     metric_delta("Intenção de Pagar Mais", intencao_pagar, ref_intencao_pagar)
