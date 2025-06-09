@@ -11,25 +11,18 @@ st.markdown("""
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin: 20px 10px;
+    margin-bottom: 20px;
     text-align: center;
-    position: relative;
-}
-.traced {
-    border-left: 2px dashed lightgray;
-    height: 20px;
-    margin: -10px 10px 20px 10px;
 }
 .center-card {
     background-color: #c62828;
     border-radius: 10px;
     color: white;
-    padding: 60px 20px;
+    padding: 40px 20px;
     text-align: center;
-    margin: 60px 10px;
+    margin: 20px 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-    height: 300px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -48,18 +41,18 @@ ref_values = {
     "empatia": 6.0
 }
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([1.2, 1, 1.2])
 
 with col1:
     def show_slider(attr, label):
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        value = st.slider(label, 0.0, 10.0, ref_values[attr], 0.1)
-        change = (value - ref_values[attr]) / ref_values[attr] * 100
-        color = "green" if change > 0 else ("red" if change < 0 else "black")
-        st.markdown(f"<span style='color:{color}; font-weight:bold;'>{change:+.1f}%</span>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.markdown("<div class='traced'></div>", unsafe_allow_html=True)
-        return value
+        with st.container():
+            st.markdown("<div class='card'>", unsafe_allow_html=True)
+            value = st.slider(label, 0.0, 10.0, ref_values[attr], 0.1)
+            change = (value - ref_values[attr]) / ref_values[attr] * 100
+            color = "green" if change > 0 else ("red" if change < 0 else "black")
+            st.markdown(f"<span style='color:{color}; font-weight:bold;'>{change:+.1f}%</span>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+            return value
 
     seguranca = show_slider("seguranca", "Segurança")
     responsividade = show_slider("responsividade", "Responsividade")
@@ -87,7 +80,6 @@ with col2:
     st.markdown(f"<h4><strong>Satisfação</strong></h4><h1 style='margin: 10px 0;'>{satisfacao:.1f}</h1>", unsafe_allow_html=True)
     st.markdown(f"<span style='color:{color_s}; font-size: 18px;'>{satisfacao_change:+.1f}%</span>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("<div class='traced' style='border-color: #c62828;'></div>", unsafe_allow_html=True)
 
 with col3:
     def metric_delta(title, current, reference):
